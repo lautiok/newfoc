@@ -35,6 +35,7 @@ export function encrypt(plaintext: string): string {
   return Buffer.concat([iv, authTag, ciphertext]).toString("base64");
 }
 
+
 export function decrypt(payload: string): string {
   const buffer = Buffer.from(payload, "base64");
   const iv = buffer.subarray(0, IV_LENGTH);
