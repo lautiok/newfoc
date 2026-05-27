@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc *)",
-      "Bash(npx prisma *)"
+      "Bash(npx prisma *)",
+      "PowerShell($pkg = Get-Content d:\\\\Proyectos\\\\newfoc\\\\node_modules\\\\next\\\\package.json | ConvertFrom-Json; \"installed next version: $\\($pkg.version\\)\"; \"package.json expects: 16.2.6\")",
+      "PowerShell(Get-Process | Where-Object { $_.ProcessName -match 'node|next' } | Select-Object Id, ProcessName, StartTime | Format-Table -AutoSize)"
     ]
   }
 }
