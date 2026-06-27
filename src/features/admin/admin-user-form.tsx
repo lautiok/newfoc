@@ -9,10 +9,8 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import {
-  createAdminAction,
-  createAdminFormSchema,
-} from "@/core/modules/admin-users";
+import { createAdminAction } from "@/core/modules/admin-users/admin-users.actions";
+import { createAdminFormSchema } from "@/core/modules/admin-users/admin-users.schemas";
 import { Button, buttonVariants } from "@/core/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/core/ui/card";
 import {

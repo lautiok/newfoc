@@ -9,8 +9,8 @@ import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { changeOwnPasswordAction } from "@/core/modules/admin-users";
-import { changePasswordSchema } from "@/core/modules/admin-users";
+import { changeOwnPasswordAction } from "@/core/modules/admin-users/admin-users.actions";
+import { changePasswordSchema } from "@/core/modules/admin-users/admin-users.schemas";
 import { Button } from "@/core/ui/button";
 import {
   Form,

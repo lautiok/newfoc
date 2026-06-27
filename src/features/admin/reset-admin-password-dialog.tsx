@@ -9,7 +9,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { KeyIcon } from "lucide-react";
 
-import { resetAdminPasswordAction } from "@/core/modules/admin-users";
+import { resetAdminPasswordAction } from "@/core/modules/admin-users/admin-users.actions";
 import {
   AlertDialog,
   AlertDialogCancel,

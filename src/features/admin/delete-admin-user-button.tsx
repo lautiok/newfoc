@@ -8,7 +8,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2Icon } from "lucide-react";
 
-import { deleteAdminAction } from "@/core/modules/admin-users";
+import { deleteAdminAction } from "@/core/modules/admin-users/admin-users.actions";
 import {
   AlertDialog,
   AlertDialogAction,
