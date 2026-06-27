@@ -13,7 +13,7 @@ export function SubmitButton() {
 
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Enviando…" : "Enviar enlace de acceso"}
+      {pending ? "Ingresando…" : "Ingresar"}
     </Button>
   );
 }

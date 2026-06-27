@@ -1,41 +1,43 @@
 /**
- * Configuración base de Auth.js (M3.1).
+ * Configuración base de Auth.js (M3.1, refactor M3.x).
  *
  * Este archivo es seguro de importar desde el `proxy` — NO incluye el
  * adapter de Prisma, ni providers, ni toca la base. `auth.ts` lo
- * completa con el adapter y el provider Resend.
+ * completa con el adapter y el provider Credentials.
  *
- * Importante: el provider Resend (tipo email) EXIGE un adapter. Si
- * estuviera acá, la instancia del proxy (sin adapter) fallaría con
- * `MissingAdapter`. Por eso los providers viven sólo en `auth.ts`.
+ * Login con email + contraseña (post-magic-link). La flag `isAdmin`
+ * vive en la base (`User.isAdmin`) y viaja en el JWT — el proxy la lee
+ * sin tocar Prisma para mantener el edge runtime feliz.
  *
  * La sesión es JWT: el proxy valida la cookie sin DB.
  */
 import type { NextAuthConfig } from "next-auth";
 
-import { isAdminEmail } from "./admin-allowlist";
-
 export const authConfig = {
   pages: {
     signIn: "/login",
-    verifyRequest: "/login/verificar",
     error: "/login",
   },
   // El proxy sólo lee la sesión — no necesita providers.
   providers: [],
   callbacks: {
-    /** Sólo emails del allowlist pueden autenticarse. */
-    signIn({ user }) {
-      return isAdminEmail(user.email);
-    },
-    /** Lleva el flag de admin al token JWT. */
+    /**
+     * Persistimos `id`, `isAdmin` y `mustChangePassword` en el token al
+     * primer login (cuando `user` viene poblado por `authorize`).
+     */
     jwt({ token, user }) {
-      token.isAdmin = isAdminEmail(user?.email ?? token.email);
+      if (user) {
+        token.userId = user.id;
+        token.isAdmin = user.isAdmin === true;
+        token.mustChangePassword = user.mustChangePassword === true;
+      }
       return token;
     },
-    /** Expone el flag de admin en la sesión. */
+    /** Expone los flags en la sesión para los Server Components. */
     session({ session, token }) {
+      session.user.id = (token.userId as string) ?? session.user.id;
       session.user.isAdmin = token.isAdmin === true;
+      session.user.mustChangePassword = token.mustChangePassword === true;
       return session;
     },
     /** Lo usa el proxy para proteger `/admin/*`. */

@@ -12,6 +12,7 @@
  */
 import "dotenv/config";
 
+import { bootstrapSuperAdmin } from "@/core/auth/bootstrap-admin";
 import { prisma } from "@/core/lib/db";
 
 type ProductStatus = "DRAFT" | "ACTIVE" | "ARCHIVED";
@@ -248,6 +249,9 @@ async function main() {
   console.log(
     `✅ Seed completo: ${categories} categorías, ${products} productos, ${variants} variantes, ${blocks} bloques de home.`,
   );
+
+  console.log("⏳ Bootstrap del superadmin…");
+  await bootstrapSuperAdmin();
 }
 
 main()

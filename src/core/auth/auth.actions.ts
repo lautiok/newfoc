@@ -3,32 +3,35 @@
 /**
  * Server Actions de autenticación.
  *
- * `requestMagicLink` no revela qué emails tienen acceso: si el email
- * no está en el allowlist no se envía nada, pero el usuario termina
- * en la misma página de "revisá tu correo".
+ * `signInWithPassword` valida credenciales contra `User.passwordHash`
+ * vía el provider Credentials (ver `auth.ts`). El mensaje de error es
+ * genérico — nunca decimos si falló el email o la contraseña, para no
+ * facilitar la enumeración de cuentas admin.
  */
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 
-import { isAdminEmail } from "./admin-allowlist";
 import { signIn, signOut } from "./auth";
 
-export async function requestMagicLink(formData: FormData): Promise<void> {
-  const email = String(formData.get("email") ?? "")
-    .trim()
-    .toLowerCase();
+export async function signInWithPassword(formData: FormData): Promise<void> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const password = String(formData.get("password") ?? "");
 
-  // Email no habilitado: misma respuesta, sin enviar el link.
-  if (!email || !isAdminEmail(email)) {
-    redirect("/login/verificar");
+  if (!email || !password) {
+    redirect("/login?error=credenciales");
   }
 
   try {
-    await signIn("resend", { email, redirectTo: "/admin" });
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: "/admin",
+    });
   } catch (error) {
-    // AuthError = falló el envío. El resto (NEXT_REDIRECT) se re-lanza.
+    // AuthError = credenciales inválidas (CredentialsSignin u otros).
+    // NEXT_REDIRECT se re-lanza para que Next maneje la redirección.
     if (error instanceof AuthError) {
-      redirect("/login?error=envio");
+      redirect("/login?error=credenciales");
     }
     throw error;
   }

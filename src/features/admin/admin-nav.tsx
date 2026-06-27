@@ -18,6 +18,7 @@ import {
   type LucideIcon,
   PackageIcon,
   SettingsIcon,
+  ShieldCheckIcon,
   ShoppingBagIcon,
   TicketIcon,
   UsersIcon,
@@ -41,6 +42,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { label: "Órdenes", href: "/admin/ordenes", icon: ShoppingBagIcon, enabled: true },
   { label: "Clientes", href: "/admin/clientes", icon: UsersIcon, enabled: true },
   { label: "Cupones", href: "/admin/cupones", icon: TicketIcon, enabled: true },
+  { label: "Usuarios", href: "/admin/usuarios", icon: ShieldCheckIcon, enabled: true },
   { label: "Configuración", href: "/admin/configuracion", icon: SettingsIcon, enabled: true },
 ];
 

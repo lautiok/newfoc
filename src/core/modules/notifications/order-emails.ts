@@ -120,7 +120,7 @@ export async function sendOrderPlacedEmail(order: Order): Promise<void> {
  * cobro por fuera. Si no hay admins configurados, no hace nada.
  */
 export async function sendNewOrderAdminAlert(order: Order): Promise<void> {
-  const recipients = getAdminEmails();
+  const recipients = await getAdminEmails();
   if (recipients.length === 0) return;
 
   const phoneLine = order.phone

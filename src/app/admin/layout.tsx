@@ -16,6 +16,12 @@ export default async function AdminLayout({
   const session = await auth();
   if (!session?.user?.isAdmin) redirect("/login");
 
+  // Cambio de clave obligatorio: la página `/cambiar-clave` vive fuera
+  // de `/admin/*` para evitar el loop con este guard.
+  if (session.user.mustChangePassword) {
+    redirect("/cambiar-clave");
+  }
+
   const email = session.user.email;
 
   return (

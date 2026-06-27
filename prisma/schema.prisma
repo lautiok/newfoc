@@ -384,11 +384,26 @@ model User {
   emailVerified DateTime?
   image         String?
 
+  /// Hash bcrypt de la contraseña — null para usuarios sin acceso al
+  /// panel (clientes futuros, OAuth) o legados del flujo magic link.
+  passwordHash String?
+  /// ¿Tiene acceso al panel admin? Reemplaza al allowlist por env.
+  isAdmin      Boolean @default(false)
+  /// Forzar cambio de contraseña en el próximo login. Se setea true al
+  /// bootstrappear el superadmin y al resetear la clave de otro admin.
+  mustChangePassword Boolean @default(false)
+  /// Quién creó este usuario admin — audit trail. null para el bootstrap.
+  createdById   String?
+  createdBy     User?   @relation("AdminCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAdmins User[]  @relation("AdminCreatedBy")
+
   accounts Account[]
   sessions Session[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([isAdmin])
 }
 
 model Account {
